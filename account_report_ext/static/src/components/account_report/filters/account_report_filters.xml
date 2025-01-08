@@ -2,17 +2,25 @@
 <templates>
 
   <t t-name="account_report_ext.AccountReportFilterAccountTypecs">
-    <Dropdown>
-      <button class="btn btn-secondary">
-        <i class="fa fa-user me-1"/>
-Account Type: <t t-out="selectedAccountType"/>
-      </button>
 
-      <t t-set-slot="content">
-        <t t-foreach="controller.options.account_types_cs" t-as="accountTypeItem" t-key="accountTypeItem_index">
-          <DropdownItem class="{ selected: accountTypeItem.selected }" onSelected="() => this.filterClicked({ optionKey: 'account_types_cs.' + accountTypeItem_index + '.selected', reload: true})" closingMode="'none'" t-out="accountTypeItem.name" />
-        </t>
+
+    <Dropdown togglerClass="'btn btn-secondary'">
+
+
+
+      <t t-set-slot="toggler">
+        <i class="fa fa-filter me-1"/>
+Account Type Custom:
+        <t t-esc="controller.options.name_account_types_cs"/>
       </t>
+
+      <t t-foreach="controller.options.account_types_cs" t-as="AccountTypeCSItem" t-key="AccountTypeCSItem_index">
+        <DropdownItem class="{ 'selected': AccountTypeCSItem.selected, 'ps-4': true }" onSelected="() => this.filterAccountTypeCS(AccountTypeCSItem)">
+          <t t-esc="AccountTypeCSItem.name"/>
+        </DropdownItem>
+      </t>
+
+
     </Dropdown>
   </t>
 
@@ -25,16 +33,5 @@ Account Type: <t t-out="selectedAccountType"/>
       </t>
     </xpath>
   </t>
-
-
-  <!-- <t t-name="sakkab_base.PartnerLedgerReportFilterExtraOptions" t-inherit="account_reports.PartnerLedgerReportFilterExtraOptions" t-inherit-mode="extension">
-    <xpath expr="//DropdownItem" position="after">
-      <t t-if="'filter_journal_cycling' in controller.options">
-      <div id="filter_journal_cycling">
-          <t t-call="sakkab_base.AccountReportFilterJournalLevel"/>
-        </div>
-      </t>
-    </xpath>
-  </t> -->
 
 </templates>

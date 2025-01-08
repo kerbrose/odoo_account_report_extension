@@ -8,7 +8,7 @@
     'author': "Khaled Said (kerbrose)",
     'website': "https://kerbrose.github.io/",
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '17.0.0.0.1',
     'depends': [
         'account_reports',
         'base',

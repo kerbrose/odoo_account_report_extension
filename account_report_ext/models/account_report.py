@@ -13,7 +13,8 @@ class AccountReport(models.Model):
         if not self.filter_account_type_cs:
             return
         
-        
+        if  not previous_options:
+            previous_options = {}
 
         options['filter_account_type_cs'] = True
 
@@ -23,8 +24,12 @@ class AccountReport(models.Model):
         options['account_types_cs'] = account_type_list
 
         previous_account_type_cs = previous_options.get('account_types_cs', [])
+        options['name_account_types_cs'] = previous_options['name_account_types_cs'] if previous_options.get('name_account_types_cs', None) else 'All'
+
         
         if previous_account_type_cs:
+            previously_selected_name = {x['name'] for x in previous_options['account_types_cs'] if x.get('selected')}
+            options['name_account_types_cs'] = '{name:.10}{_dots}'.format(name=(', '.join(previously_selected_name)), _dots='...')
             previously_selected = {x['id'] for x in previous_options['account_types_cs'] if x.get('selected')}
             for opt in options['account_types_cs']:
                 opt['selected'] = opt['id'] in previously_selected
@@ -39,7 +44,15 @@ class AccountReport(models.Model):
             return [('account_type', 'in', account_type_cs_ids)]
         return []
     
-    def _get_report_query(self, options, date_scope, domain=None) -> Query:
-        _domain = self._get_options_account_type_cs_domain(options)
-        domain += _domain
-        return super(AccountReport, self)._get_report_query(options, date_scope, domain=domain)
+    def _get_options_domain(self, options, date_scope):
+        self.ensure_one()
+        domain = super()._get_options_domain(options, date_scope)
+
+        # Get the analytic accounts that we need to filter on from the options and add a domain for them.
+        if 'account_types_cs' in options:
+            domain = osv.expression.AND([
+                domain,
+                self._get_options_account_type_cs_domain(options),
+            ])
+
+        return domain

@@ -1,21 +1,16 @@
+/** @odoo-module */
+
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { AccountReportFilters } from "@account_reports/components/account_report/filters/filters";
 
 patch(AccountReportFilters.prototype, {
-    get selectedAccountType() {
-        
-        let selectedAccountTypecs = this.controller.options.account_types_cs.filter(
-            (accountTypecs) => accountTypecs.selected,
-        );
-        if (
-            !selectedAccountTypecs.length ||
-            selectedAccountTypecs.length === this.controller.options.account_types_cs.length
-        ) {
-            return _t("All");
-        } else {
-            return selectedAccountTypecs.map((accountTypecs) => accountTypecs.name).join(", ");
-        }
+
+    async filterAccountTypeCS(AccountTypeItem) {
+
+        AccountTypeItem.selected = !AccountTypeItem.selected;
+
+        await this.controller.reload('account_types_cs', this.controller.options);
     },
 
     get hasExtraOptionsFilter() {
