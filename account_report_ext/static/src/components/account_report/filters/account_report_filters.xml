@@ -27,14 +27,4 @@ Account Type: <t t-out="selectedAccountType"/>
   </t>
 
 
-  <!-- <t t-name="sakkab_base.PartnerLedgerReportFilterExtraOptions" t-inherit="account_reports.PartnerLedgerReportFilterExtraOptions" t-inherit-mode="extension">
-    <xpath expr="//DropdownItem" position="after">
-      <t t-if="'filter_journal_cycling' in controller.options">
-      <div id="filter_journal_cycling">
-          <t t-call="sakkab_base.AccountReportFilterJournalLevel"/>
-        </div>
-      </t>
-    </xpath>
-  </t> -->
-
 </templates>
